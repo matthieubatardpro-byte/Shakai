@@ -28,7 +28,7 @@ app.include_router(jobs_router, prefix="/api")
 def root():
     return {"message": "Shakai API fonctionne !"}
 
-frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
 if os.path.exists(frontend_path):
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
 
