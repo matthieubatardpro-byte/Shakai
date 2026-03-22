@@ -1,7 +1,9 @@
 import { useState } from "react"
 import axios from "axios"
 
-const API = "http://localhost:8000/api"
+const API = window.location.hostname === "localhost" 
+  ? "http://localhost:8000/api" 
+  : "/api"
 const CONTRACT_TYPES = ["CDI", "CDD", "Stage", "Alternance", "Freelance", "Interim", "Temps partiel"]
 
 function App() {
