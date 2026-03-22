@@ -242,7 +242,7 @@ function App() {
                 La recherche d'emploi n'a jamais été aussi simple grâce à Shakai !
               </div>
               <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 42, color: "white", margin: "0 0 14px", letterSpacing: "-1px", lineHeight: 1.1 }}>
-                Trouve ton emploi idéal
+                Trouve ton Job idéal
               </h1>
               <p style={{ fontSize: 17, color: "#86efac", margin: "0 0 6px" }}>
                 Dépose ton CV et laisse l'IA analyser ton profil
