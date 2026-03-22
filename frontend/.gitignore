@@ -34,4 +34,3 @@ __pycache__/
 uploads/
 .DS_Store
 node_modules/
-frontend/dist/
