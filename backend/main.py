@@ -28,11 +28,16 @@ app.include_router(jobs_router, prefix="/api")
 def root():
     return {"message": "Shakai API fonctionne !"}
 
-frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+frontend_path = os.path.join(BASE_DIR, "..", "frontend", "dist")
+frontend_path = os.path.normpath(frontend_path)
+
 if os.path.exists(frontend_path):
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
+else:
+    print(f"Frontend dist not found at: {frontend_path}")
 
-@app.get("/{full_path:path}")
-async def serve_frontend(full_path: str):
-    index = os.path.join(frontend_path, "index.html")
-    return FileResponse(index)
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        return {"error": f"Frontend not found at {frontend_path}"}
+        
