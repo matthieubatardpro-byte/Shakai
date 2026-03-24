@@ -242,7 +242,7 @@ function App() {
         </div>
       </header>
 
-      <main style={{ ...s.main, pointerEvents: scraping ? "none" : "auto", opacity: scraping ? 0.7 : 1 }}>
+      <main style={{ ...s.main, pointerEvents: (scraping || loading) ? "none" : "auto" }}>
 
         {step === 1 && (
           <div>
@@ -286,10 +286,20 @@ function App() {
                 </button>
 
                 {loading && (
-                  <div style={{ marginTop: 16, padding: 14, background: "#0a2a12", borderRadius: 10, border: "1px solid #166534" }}>
-                    <p style={{ color: "#86efac", fontSize: 13, margin: 0 }}>Analyse de ton CV avec l'IA en cours... (10 à 20 secondes)</p>
-                  </div>
-                )}
+  <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+    <div style={{ display: "flex", gap: 8 }}>
+      {[0, 1, 2].map(i => (
+        <div key={i} style={{
+          width: 12, height: 12, borderRadius: "50%", background: "#16a34a",
+          animation: "bounce 1.2s infinite",
+          animationDelay: `${i * 0.2}s`
+        }} />
+      ))}
+    </div>
+    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
+    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>L'IA analyse ton profil — 10 à 20 secondes</p>
+  </div>
+)}
               </div>
             </div>
 
