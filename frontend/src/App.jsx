@@ -23,6 +23,7 @@ function App() {
   const [sortByDate, setSortByDate] = useState(false)
   const [selectedMetier, setSelectedMetier] = useState("")
   const [customMetier, setCustomMetier] = useState("")
+  const [customKeywords, setCustomKeywords] = useState([])
   const contractDropdownRef = useRef(null)
 
   useEffect(() => {
@@ -48,7 +49,6 @@ function App() {
       const formData = new FormData()
       formData.append("file", cvFile)
       const res = await axios.post(`${API}/analyze-cv`, formData)
-      console.log("Réponse API:", res.data)
       setCvData(res.data.cv_data)
       setAnalysis(res.data.analysis)
       setPrioritizedMetiers(res.data.analysis.metiers_suggeres.map(m => ({ ...m, active: true })))
@@ -69,7 +69,7 @@ function App() {
       formData.append("location", location === "partout" ? "" : location)
       formData.append("max_results", 50)
       formData.append("contract_types", selectedContracts.join(","))
-      formData.append("prioritized_metiers", JSON.stringify(activeMetiers.map(m => m.titre)))
+      formData.append("prioritized_metiers", JSON.stringify([...activeMetiers.map(m => m.titre), ...customKeywords]))
       const res = await axios.post(`${API}/analyze-and-search`, formData)
       setCvData(res.data.cv_data)
       setOffers(res.data.offers || [])
@@ -102,7 +102,6 @@ function App() {
     setGeneratingLetter(null)
   }
 
-
   const toggleMetierActive = (index) => {
     const newList = [...prioritizedMetiers]
     newList[index] = { ...newList[index], active: !newList[index].active }
@@ -111,7 +110,7 @@ function App() {
 
   const addCustomMetier = () => {
     if (customMetier.trim()) {
-      setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+      setCustomKeywords(prev => [...prev, customMetier.trim()])
       setCustomMetier("")
     }
   }
@@ -198,17 +197,15 @@ function App() {
     </div>
   )
 
-  const OfferCard = ({ offer, suggested }) => (
-    <div style={{ ...s.offerCard, borderColor: suggested ? "#d1fae5" : "#dcfce7" }}>
+  const OfferCard = ({ offer }) => (
+    <div style={s.offerCard}>
       <div style={s.row}>
         <div style={{ flex: 1 }}>
           <h3 style={{ fontWeight: 700, margin: "0 0 2px", fontSize: 15, color: "#052e16" }}>{offer.title}</h3>
           <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 600, color: "#16a34a" }}>{offer.company}</p>
           <p style={{ margin: "0 0 8px", fontSize: 13, color: "#4b7a5a" }}>{offer.location}</p>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={s.badge(suggested ? "#d1fae5" : "#dcfce7", suggested ? "#065f46" : "#166534")}>
-              {offer.score_matching}% {suggested ? "profil" : "match"}
-            </span>
+            <span style={s.badge("#dcfce7", "#166534")}>{offer.score_matching}% match</span>
             <span style={s.badge("#f0fdf4", "#4b7a5a")}>{offer.source}</span>
             <span style={s.badge("#fef9c3", "#854d0e")}>{offer.contract}</span>
             {offer.date && formatDate(offer.date) && (
@@ -235,7 +232,7 @@ function App() {
         <div style={s.headerInner}>
           <Logo />
           <div style={{ display: "flex", gap: 8 }}>
-            {["Upload CV", "Prioriser", "Offres"].map((label, i) => (
+            {["Upload CV", "Métiers", "Offres"].map((label, i) => (
               <span key={i} style={{ padding: "4px 12px", borderRadius: 999, fontSize: 13, background: step >= i + 1 ? "#ca8a04" : "#0f3d1f", color: step >= i + 1 ? "#052e16" : "#86efac", fontWeight: step >= i + 1 ? 700 : 400 }}>
                 {i + 1}. {label}
               </span>
@@ -310,7 +307,7 @@ function App() {
                       ))}
                     </div>
                     <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>L'IA analyse ton CV...</p>
-                    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}></p>
+                    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>10 à 20 secondes</p>
                   </div>
                 )}
               </div>
@@ -361,37 +358,30 @@ function App() {
             </div>
 
             <div style={{ ...s.cardSmall, marginBottom: 24 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, color: "#052e16" }}>Priorise tes métiers</h2>
-                  {JSON.stringify(prioritizedMetiers.map(m => m.titre)) !== JSON.stringify(analysis.metiers_suggeres.map(m => m.titre)) ? (
-                    <span style={{ background: "#fef9c3", color: "#854d0e", fontSize: 12, padding: "2px 8px", borderRadius: 999, fontWeight: 500 }}>Priorisé</span>
-                  ) : (
-                    <span style={{ background: "#f0fdf4", color: "#166534", fontSize: 12, padding: "2px 8px", borderRadius: 999 }}>Aucune priorité</span>
-                  )}
-                </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, color: "#052e16" }}>Choisis tes métiers</h2>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => setPrioritizedMetiers(analysis.metiers_suggeres.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#4b7a5a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Réinitialiser</button>
                   <button onClick={() => setPrioritizedMetiers(prev => prev.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#166534", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Tout activer</button>
                 </div>
               </div>
 
-              <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 20 }}>
+              <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 16 }}>
                 Décoche les métiers qui ne t'intéressent pas.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-               {prioritizedMetiers.map((metier, index) => (
-                <div key={index} style={{ border: `1px solid ${metier.active === false ? "#f3f4f6" : "#dcfce7"}`, borderRadius: 12, padding: "12px 16px", background: metier.active === false ? "#f9fafb" : "white", display: "flex", alignItems: "center", gap: 12, opacity: metier.active === false ? 0.5 : 1 }}>
-                  <div style={{ flex: 1 }}>
-                   <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: "#052e16" }}>{metier.titre}</p>
-                   <p style={{ margin: 0, fontSize: 12, color: "#4b7a5a" }}>{metier.raison}</p>
-                </div>
-                <span style={s.badge("#dcfce7", "#166534")}>{metier.score_matching}%</span>
-                <input type="checkbox" checked={metier.active !== false} onChange={() => toggleMetierActive(index)} style={{ accentColor: "#16a34a" }} />
-               </div>
-               ))}
-             </div>
+                {prioritizedMetiers.map((metier, index) => (
+                  <div key={index} style={{ border: `1px solid ${metier.active === false ? "#f3f4f6" : "#dcfce7"}`, borderRadius: 12, padding: "12px 16px", background: metier.active === false ? "#f9fafb" : "white", display: "flex", alignItems: "center", gap: 12, opacity: metier.active === false ? 0.5 : 1 }}>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: "#052e16" }}>{metier.titre}</p>
+                      <p style={{ margin: 0, fontSize: 12, color: "#4b7a5a" }}>{metier.raison}</p>
+                    </div>
+                    <span style={s.badge("#dcfce7", "#166534")}>{metier.score_matching}%</span>
+                    <input type="checkbox" checked={metier.active !== false} onChange={() => toggleMetierActive(index)} style={{ accentColor: "#16a34a" }} />
+                  </div>
+                ))}
+              </div>
 
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
                 <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>
@@ -403,7 +393,7 @@ function App() {
                     value={customMetier}
                     onChange={e => setCustomMetier(e.target.value)}
                     onKeyDown={e => { if (e.key === "Enter") addCustomMetier() }}
-                    placeholder="Marketing, Finance, Santé, Tech..."
+                    placeholder="Ex: Marketing, Finance, Santé, Tech..."
                     style={s.input}
                   />
                   <button
@@ -414,12 +404,12 @@ function App() {
                   </button>
                 </div>
                 <p style={{ fontSize: 12, color: "#4b7a5a", marginBottom: 8 }}>Appuie sur Entrée ou clique sur Ajouter</p>
-                {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").length > 0 && (
+                {customKeywords.length > 0 && (
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                    {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").map((m, i) => (
+                    {customKeywords.map((k, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 999, padding: "4px 12px", fontSize: 13, color: "#166534" }}>
-                        {m.titre}
-                        <button onClick={() => setPrioritizedMetiers(prev => prev.filter(p => p.titre !== m.titre))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
+                        {k}
+                        <button onClick={() => setCustomKeywords(prev => prev.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
                       </div>
                     ))}
                   </div>
@@ -497,7 +487,7 @@ function App() {
                   <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, color: "#052e16" }}>
                     Offres trouvées ({filteredOffers.length + filteredSuggested.length}{selectedMetier ? ` / ${offers.length + suggestedOffers.length}` : ""})
                   </h2>
-                  <p style={{ color: "#4b7a5a", fontSize: 13, margin: "4px 0 0" }}>Basées sur tes métiers prioritaires</p>
+                  <p style={{ color: "#4b7a5a", fontSize: 13, margin: "4px 0 0" }}>Basées sur ton profil et tes critères</p>
                 </div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                   <select value={selectedMetier} onChange={e => setSelectedMetier(e.target.value)} style={{ fontSize: 13, border: "1px solid #bbf7d0", borderRadius: 8, padding: "6px 12px", cursor: "pointer", background: selectedMetier ? "#f0fdf4" : "white", color: selectedMetier ? "#166534" : "#052e16" }}>
@@ -511,7 +501,7 @@ function App() {
                     Trier par date
                   </label>
                   <button onClick={() => setStep(2)} style={{ fontSize: 13, color: "#166534", background: "none", border: "1px solid #86efac", borderRadius: 8, padding: "6px 12px", cursor: "pointer" }}>
-                    Modifier les priorités
+                    Modifier les critères
                   </button>
                   <button onClick={() => setStep(1)} style={{ fontSize: 13, color: "#4b7a5a", background: "none", border: "none", cursor: "pointer" }}>
                     Nouveau CV
@@ -521,20 +511,20 @@ function App() {
             </div>
 
             <div style={s.cardSmall}>
-  {[...filteredOffers, ...filteredSuggested].length === 0 ? (
-    <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>
-      <p style={{ fontSize: 32, marginBottom: 8 }}>🔍</p>
-      <p>Aucune offre trouvée pour ces critères</p>
-      <button onClick={() => { setSelectedMetier(""); setStep(2) }} style={{ marginTop: 8, color: "#16a34a", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>
-        Modifier les critères
-      </button>
-    </div>
-  ) : (
-    [...filteredOffers, ...filteredSuggested].map((offer, index) => (
-      <OfferCard key={index} offer={offer} suggested={false} />
-    ))
-  )}
-</div>
+              {[...filteredOffers, ...filteredSuggested].length === 0 ? (
+                <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>
+                  <p style={{ fontSize: 32, marginBottom: 8 }}>🔍</p>
+                  <p>Aucune offre trouvée pour ces critères</p>
+                  <button onClick={() => { setSelectedMetier(""); setStep(2) }} style={{ marginTop: 8, color: "#16a34a", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>
+                    Modifier les critères
+                  </button>
+                </div>
+              ) : (
+                [...filteredOffers, ...filteredSuggested].map((offer, index) => (
+                  <OfferCard key={index} offer={offer} />
+                ))
+              )}
+            </div>
           </div>
         )}
 
