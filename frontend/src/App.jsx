@@ -511,7 +511,7 @@ function App() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                 <div>
                   <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, color: "#052e16" }}>
-                    Offres trouvées ({filteredOffers.length}{selectedMetier ? ` / ${offers.length}` : ""})
+                    Offres trouvées ({filteredOffers.length + filteredSuggested.length}{selectedMetier ? ` / ${offers.length + suggestedOffers.length}` : ""})
                   </h2>
                   <p style={{ color: "#4b7a5a", fontSize: 13, margin: "4px 0 0" }}>Basées sur tes métiers prioritaires</p>
                 </div>
@@ -537,34 +537,20 @@ function App() {
             </div>
 
             <div style={s.cardSmall}>
-              {filteredOffers.length === 0 ? (
-                <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>
-                  <p style={{ fontSize: 32, marginBottom: 8 }}>🔍</p>
-                  <p>Aucune offre trouvée pour ces critères</p>
-                  <button onClick={() => { setSelectedMetier(""); setStep(2) }} style={{ marginTop: 8, color: "#16a34a", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>
-                    Modifier les critères
-                  </button>
-                </div>
-              ) : (
-                filteredOffers.map((offer, index) => (
-                  <OfferCard key={index} offer={offer} suggested={false} />
-                ))
-              )}
-            </div>
-
-            {filteredSuggested.length > 0 && (
-              <div style={{ ...s.cardSmall, marginTop: 24, borderTop: "3px solid #86efac" }}>
-                <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 4, color: "#166534" }}>
-                  Autres offres qui pourraient t'intéresser
-                </h2>
-                <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 16 }}>
-                  Ces offres ne correspondent pas exactement à tes critères mais sont pertinentes pour ton profil.
-                </p>
-                {filteredSuggested.map((offer, index) => (
-                  <OfferCard key={index} offer={offer} suggested={true} />
-                ))}
-              </div>
-            )}
+  {[...filteredOffers, ...filteredSuggested].length === 0 ? (
+    <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>
+      <p style={{ fontSize: 32, marginBottom: 8 }}>🔍</p>
+      <p>Aucune offre trouvée pour ces critères</p>
+      <button onClick={() => { setSelectedMetier(""); setStep(2) }} style={{ marginTop: 8, color: "#16a34a", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>
+        Modifier les critères
+      </button>
+    </div>
+  ) : (
+    [...filteredOffers, ...filteredSuggested].map((offer, index) => (
+      <OfferCard key={index} offer={offer} suggested={false} />
+    ))
+  )}
+</div>
           </div>
         )}
 
