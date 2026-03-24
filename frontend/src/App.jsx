@@ -289,7 +289,7 @@ function App() {
                   ) : (
                     <div>
                       <p style={{ fontSize: 40, marginBottom: 12 }}>📄</p>
-                      <p style={{ color: "white", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Clique pour sélectionner ton CV</p>
+                      <p style={{ color: "white", fontWeight: 600, fontSize: 16, margin: "0 0 6px" }}>Clique ou glisse ton CV ici</p>
                       <p style={{ color: "#86efac", fontSize: 13, margin: 0, opacity: 0.7 }}>Formats acceptés : PDF ou DOCX</p>
                     </div>
                   )}
