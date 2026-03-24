@@ -384,9 +384,9 @@ function App() {
               </div>
 
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
-                <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>
-                  Affine ta recherche par secteur ou mot-clé <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
-                </p>
+                <h2 style={{ fontSize: 20, fontWeight: 600, margin: "0 0 8px", color: "#052e16" }}>
+                  Affine ta recherche par secteur ou mot-clé <span style={{ fontSize: 14, color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
+                </h2>
                 <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
                   <input
                     type="text"
