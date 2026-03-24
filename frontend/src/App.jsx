@@ -33,10 +33,10 @@ function App() {
   return () => document.removeEventListener("mousedown", handleClickOutside)
 }, [])
   const toggleContract = (contract) => {
-    setSelectedContracts(prev =>
-      prev.includes(contract) ? prev.filter(c => c !== contract) : [...prev, contract]
-    )
-  }
+  setSelectedContracts(prev =>
+    prev.includes(contract) ? [] : [contract]
+  )
+}
 
   const analyzeCV = async () => {
     if (!cvFile) return
@@ -430,7 +430,7 @@ function App() {
                       <div style={{ position: "absolute", top: "100%", left: 0, right: 0, marginTop: 4, background: "white", border: "1px solid #dcfce7", borderRadius: 10, boxShadow: "0 4px 12px rgba(0,0,0,0.08)", zIndex: 100, padding: 8 }}>
                         {CONTRACT_TYPES.map((contract) => (
                           <label key={contract} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", cursor: "pointer", borderRadius: 6, background: selectedContracts.includes(contract) ? "#f0fdf4" : "white" }}>
-                            <input type="checkbox" checked={selectedContracts.includes(contract)} onChange={() => toggleContract(contract)} style={{ accentColor: "#16a34a" }} />
+                            <input type="radio" checked={selectedContracts.includes(contract)} onChange={() => toggleContract(contract)} style={{ accentColor: "#16a34a" }} />
                             <span style={{ fontSize: 13, color: "#052e16" }}>{contract}</span>
                           </label>
                         ))}
