@@ -309,7 +309,7 @@ function App() {
                         <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: "#16a34a", animation: "bounce 1.2s infinite", animationDelay: `${i * 0.2}s` }} />
                       ))}
                     </div>
-                    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
+                    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV par l'IA...</p>
                     <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}></p>
                   </div>
                 )}
@@ -377,7 +377,7 @@ function App() {
               </div>
 
               <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 20 }}>
-                Utilise les flèches pour trier par ordre de priorité. Décoche les métiers qui ne t'intéressent pas.
+                Décoche les métiers qui ne t'intéressent pas.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
