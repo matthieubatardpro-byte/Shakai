@@ -382,7 +382,32 @@ function App() {
                   </div>
                 ))}
               </div>
-
+              <div style={{ border: "1px dashed #bbf7d0", borderRadius: 12, padding: "10px 16px", background: "#f9fafb", display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+  <input
+    type="text"
+    value={customMetier}
+    onChange={e => setCustomMetier(e.target.value)}
+    onKeyDown={e => { if (e.key === "Enter") {
+      if (customMetier.trim()) {
+        setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+        setCustomMetier("")
+      }
+    }}}
+    placeholder="Ajouter un métier..."
+    style={{ ...s.input, border: "none", background: "transparent", padding: "4px 0", fontSize: 14 }}
+  />
+  <button
+    onClick={() => {
+      if (customMetier.trim()) {
+        setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+        setCustomMetier("")
+      }
+    }}
+    style={{ background: "#16a34a", color: "white", border: "none", borderRadius: 8, width: 28, height: 28, cursor: "pointer", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+  >
+    +
+  </button>
+</div>
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
                 <h2 style={{ fontSize: 20, fontWeight: 600, margin: "0 0 8px", color: "#052e16" }}>
                   Affine ta recherche par secteur ou mot-clé <span style={{ fontSize: 14, color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
