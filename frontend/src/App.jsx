@@ -242,7 +242,7 @@ function App() {
         </div>
       </header>
 
-      <main style={s.main}>
+      <main style={{ ...s.main, pointerEvents: scraping ? "none" : "auto", opacity: scraping ? 0.7 : 1 }}>
 
         {step === 1 && (
           <div>
