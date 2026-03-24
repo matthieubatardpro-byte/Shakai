@@ -102,15 +102,6 @@ function App() {
     setGeneratingLetter(null)
   }
 
-  const moveMetier = (index, direction) => {
-    const newList = [...prioritizedMetiers]
-    const newIndex = index + direction
-    if (newIndex < 0 || newIndex >= newList.length) return
-    const temp = newList[index]
-    newList[index] = newList[newIndex]
-    newList[newIndex] = temp
-    setPrioritizedMetiers(newList)
-  }
 
   const toggleMetierActive = (index) => {
     const newList = [...prioritizedMetiers]
