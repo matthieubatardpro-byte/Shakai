@@ -23,7 +23,7 @@ function App() {
   const [sortByDate, setSortByDate] = useState(false)
   const [selectedMetier, setSelectedMetier] = useState("")
   const contractDropdownRef = useRef(null)
-  const [customMetier, setCustomMetier] = useState("")
+  
   useEffect(() => {
   const handleClickOutside = (event) => {
     if (contractDropdownRef.current && !contractDropdownRef.current.contains(event.target)) {
@@ -376,6 +376,45 @@ function App() {
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => setPrioritizedMetiers(analysis.metiers_suggeres.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#4b7a5a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Réinitialiser</button>
                   <button onClick={() => setPrioritizedMetiers(prev => prev.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#166534", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Tout activer</button>
+                <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
+        <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>Affine ta recherche avec des mots-clés <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span></p>
+        <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+          <input
+            type="text"
+            value={customMetier}
+            onChange={e => setCustomMetier(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter" && customMetier.trim()) {
+                setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+                setCustomMetier("")
+              }
+            }}
+            placeholder="Job, Entreprise, Poste..."
+            style={s.input}
+          />
+          <button
+            onClick={() => {
+              if (customMetier.trim()) {
+                setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+                setCustomMetier("")
+              }
+            }}
+            style={{ background: "#16a34a", color: "white", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}
+          >
+            + Ajouter
+          </button>
+        </div>
+        {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").length > 0 && (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+            {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").map((m, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 999, padding: "4px 12px", fontSize: 13, color: "#166534" }}>
+                {m.titre}
+                <button onClick={() => setPrioritizedMetiers(prev => prev.filter(p => p.titre !== m.titre))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
                 </div>
               </div>
               <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 20 }}>
@@ -405,47 +444,6 @@ function App() {
             <div style={s.cardSmall}>
               <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16, color: "#052e16" }}>Critères de recherche</h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
-              <div style={{ ...s.cardSmall, marginBottom: 24 }}>
-  <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 4, color: "#052e16" }}>Affine ta recherche avec des mots-clés</h2>
-  <p style={{ fontSize: 13, color: "#4b7a5a", marginBottom: 16 }}>Optionnel — le mot-clé sera ajouté à ta recherche</p>
-  <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-    <input
-      type="text"
-      value={customMetier}
-      onChange={e => setCustomMetier(e.target.value)}
-      onKeyDown={e => {
-        if (e.key === "Enter" && customMetier.trim()) {
-          setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
-          setCustomMetier("")
-        }
-      }}
-      placeholder="Ex: Marketing digital, React developer..."
-      style={s.input}
-    />
-    <button
-      onClick={() => {
-        if (customMetier.trim()) {
-          setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
-          setCustomMetier("")
-        }
-      }}
-      style={{ background: "#16a34a", color: "white", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}
-    >
-      + Ajouter
-    </button>
-  </div>
-  <p style={{ fontSize: 12, color: "#4b7a5a", marginBottom: 12 }}>Appuie sur Entrée ou clique sur Ajouter</p>
-  {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").length > 0 && (
-    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-      {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").map((m, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 999, padding: "4px 12px", fontSize: 13, color: "#166534" }}>
-          {m.titre}
-          <button onClick={() => setPrioritizedMetiers(prev => prev.filter(p => p.titre !== m.titre))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
-        </div>
-      ))}
-    </div>
-  )}
-</div>
                 <div>
                   <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 4, color: "#052e16" }}>Ville de recherche</label>
                   <input type="text" value={location === "partout" ? "" : location} onChange={e => setLocation(e.target.value)} style={{ ...s.input, opacity: location === "partout" ? 0.4 : 1 }} placeholder="Paris" disabled={location === "partout"} />
