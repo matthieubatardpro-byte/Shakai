@@ -48,6 +48,7 @@ function App() {
       const formData = new FormData()
       formData.append("file", cvFile)
       const res = await axios.post(`${API}/analyze-cv`, formData)
+      console.log("Réponse API:", res.data)
       setCvData(res.data.cv_data)
       setAnalysis(res.data.analysis)
       setPrioritizedMetiers(res.data.analysis.metiers_suggeres.map(m => ({ ...m, active: true })))
@@ -410,7 +411,7 @@ function App() {
 
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
                 <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>
-                  Affine ta recherche avec des mots-clés <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
+                  Affine ta recherche par secteur ou mot-clé <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
                 </p>
                 <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
                   <input
@@ -418,7 +419,7 @@ function App() {
                     value={customMetier}
                     onChange={e => setCustomMetier(e.target.value)}
                     onKeyDown={e => { if (e.key === "Enter") addCustomMetier() }}
-                    placeholder="Job, Entreprise, Poste..."
+                    placeholder="Marketing, Finance, Santé, Tech..."
                     style={s.input}
                   />
                   <button
