@@ -301,6 +301,7 @@ function App() {
 
                 {loading && (
   <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+    <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
     <div style={{ display: "flex", gap: 8 }}>
       {[0, 1, 2].map(i => (
         <div key={i} style={{
@@ -310,7 +311,8 @@ function App() {
         }} />
       ))}
     </div>
-    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>L'IA analyse ton profil — 10 à 20 secondes...</p>
+    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
+    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>L'IA analyse ton profil — 10 à 20 secondes...</p>
   </div>
 )}
               </div>
