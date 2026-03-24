@@ -3,7 +3,7 @@ import axios from "axios"
 
 const API = window.location.hostname === "localhost" 
   ? "http://localhost:8000/api" 
-  : "/api"
+  : "https://shakai.up.railway.app/api"
 const CONTRACT_TYPES = ["CDI", "CDD", "Stage", "Alternance", "Freelance", "Interim", "Temps partiel"]
 
 function App() {
