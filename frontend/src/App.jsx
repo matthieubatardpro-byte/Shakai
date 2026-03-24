@@ -362,7 +362,7 @@ function App() {
                 <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, color: "#052e16" }}>Choisis tes métiers</h2>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => setPrioritizedMetiers(analysis.metiers_suggeres.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#4b7a5a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Réinitialiser</button>
-                  <button onClick={() => setPrioritizedMetiers(prev => prev.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#166534", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Tout activer</button>
+                  <button onClick={() => setPrioritizedMetiers(prev => prev.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#166534", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Tout sélectionner</button>
                 </div>
               </div>
 
