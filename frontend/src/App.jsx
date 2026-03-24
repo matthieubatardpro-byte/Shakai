@@ -310,7 +310,7 @@ function App() {
                       ))}
                     </div>
                     <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
-                    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>L'IA analyse ton profil — 10 à 20 secondes</p>
+                    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}></p>
                   </div>
                 )}
               </div>
