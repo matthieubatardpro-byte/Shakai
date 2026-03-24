@@ -22,22 +22,24 @@ function App() {
   const [prioritizedMetiers, setPrioritizedMetiers] = useState([])
   const [sortByDate, setSortByDate] = useState(false)
   const [selectedMetier, setSelectedMetier] = useState("")
+  const [customMetier, setCustomMetier] = useState("")
   const contractDropdownRef = useRef(null)
-  
+
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (contractDropdownRef.current && !contractDropdownRef.current.contains(event.target)) {
-      setContractDropdownOpen(false)
+    const handleClickOutside = (event) => {
+      if (contractDropdownRef.current && !contractDropdownRef.current.contains(event.target)) {
+        setContractDropdownOpen(false)
+      }
     }
-  }
-  document.addEventListener("mousedown", handleClickOutside)
-  return () => document.removeEventListener("mousedown", handleClickOutside)
-}, [])
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   const toggleContract = (contract) => {
-  setSelectedContracts(prev =>
-    prev.includes(contract) ? [] : [contract]
-  )
-}
+    setSelectedContracts(prev =>
+      prev.includes(contract) ? [] : [contract]
+    )
+  }
 
   const analyzeCV = async () => {
     if (!cvFile) return
@@ -113,6 +115,13 @@ function App() {
     const newList = [...prioritizedMetiers]
     newList[index] = { ...newList[index], active: !newList[index].active }
     setPrioritizedMetiers(newList)
+  }
+
+  const addCustomMetier = () => {
+    if (customMetier.trim()) {
+      setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
+      setCustomMetier("")
+    }
   }
 
   const formatDate = (dateStr) => {
@@ -263,23 +272,23 @@ function App() {
 
               <div style={{ maxWidth: 480, margin: "0 auto" }}>
                 <div
-  onClick={() => document.getElementById("cvInput").click()}
-  onDragOver={(e) => e.preventDefault()}
-  onDragEnter={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = "#4ade80"; e.currentTarget.style.background = "#0f3d1f" }}
-  onDragLeave={(e) => { e.currentTarget.style.borderColor = cvFile ? "#16a34a" : "#166534"; e.currentTarget.style.background = cvFile ? "#0a3a1a" : "#0a2a12" }}
-  onDrop={(e) => {
-    e.preventDefault()
-    e.currentTarget.style.borderColor = "#16a34a"
-    e.currentTarget.style.background = "#0a3a1a"
-    const file = e.dataTransfer.files[0]
-    if (file && (file.name.endsWith(".pdf") || file.name.endsWith(".docx"))) {
-      setCvFile(file)
-    } else {
-      alert("Format accepté : PDF ou DOCX uniquement")
-    }
-  }}
-  style={{ border: `2px dashed ${cvFile ? "#16a34a" : "#166534"}`, borderRadius: 14, padding: "40px 24px", background: cvFile ? "#0a3a1a" : "#0a2a12", cursor: "pointer", marginBottom: 20, transition: "all 0.2s" }}
->
+                  onClick={() => document.getElementById("cvInput").click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragEnter={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = "#4ade80"; e.currentTarget.style.background = "#0f3d1f" }}
+                  onDragLeave={(e) => { e.currentTarget.style.borderColor = cvFile ? "#16a34a" : "#166534"; e.currentTarget.style.background = cvFile ? "#0a3a1a" : "#0a2a12" }}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.style.borderColor = "#16a34a"
+                    e.currentTarget.style.background = "#0a3a1a"
+                    const file = e.dataTransfer.files[0]
+                    if (file && (file.name.endsWith(".pdf") || file.name.endsWith(".docx"))) {
+                      setCvFile(file)
+                    } else {
+                      alert("Format accepté : PDF ou DOCX uniquement")
+                    }
+                  }}
+                  style={{ border: `2px dashed ${cvFile ? "#16a34a" : "#166534"}`, borderRadius: 14, padding: "40px 24px", background: cvFile ? "#0a3a1a" : "#0a2a12", cursor: "pointer", marginBottom: 20, transition: "all 0.2s" }}
+                >
                   <input id="cvInput" type="file" accept=".pdf,.docx" style={{ display: "none" }} onChange={(e) => setCvFile(e.target.files[0])} />
                   {cvFile ? (
                     <div>
@@ -301,21 +310,17 @@ function App() {
                 </button>
 
                 {loading && (
-  <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-    <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
-    <div style={{ display: "flex", gap: 8 }}>
-      {[0, 1, 2].map(i => (
-        <div key={i} style={{
-          width: 12, height: 12, borderRadius: "50%", background: "#16a34a",
-          animation: "bounce 1.2s infinite",
-          animationDelay: `${i * 0.2}s`
-        }} />
-      ))}
-    </div>
-    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
-    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>L'IA analyse ton profil — 10 à 20 secondes...</p>
-  </div>
-)}
+                  <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                    <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      {[0, 1, 2].map(i => (
+                        <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: "#16a34a", animation: "bounce 1.2s infinite", animationDelay: `${i * 0.2}s` }} />
+                      ))}
+                    </div>
+                    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Analyse de ton CV en cours...</p>
+                    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>L'IA analyse ton profil — 10 à 20 secondes</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -337,7 +342,7 @@ function App() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 {[
                   { label: "Offres analysées", value: "En temps réel" },
-                  { label: " Sites d'offres scrapés", value: "Indeed, Welcome to the Jungle, Linkedin... " },
+                  { label: "Sites d'offres scrapés", value: "Indeed, Welcome to the Jungle, Linkedin..." },
                   { label: "Lettres générées", value: "Par GPT-4o" },
                 ].map((item, i) => (
                   <div key={i} style={{ background: "white", border: "1px solid #dcfce7", borderRadius: 10, padding: "14px 12px", textAlign: "center" }}>
@@ -376,50 +381,13 @@ function App() {
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => setPrioritizedMetiers(analysis.metiers_suggeres.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#4b7a5a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Réinitialiser</button>
                   <button onClick={() => setPrioritizedMetiers(prev => prev.map(m => ({ ...m, active: true })))} style={{ fontSize: 12, color: "#166534", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 8, padding: "4px 10px", cursor: "pointer" }}>Tout activer</button>
-                <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>Affine ta recherche avec des mots-clés <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span></p>
-        <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
-          <input
-            type="text"
-            value={customMetier}
-            onChange={e => setCustomMetier(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter" && customMetier.trim()) {
-                setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
-                setCustomMetier("")
-              }
-            }}
-            placeholder="Job, Entreprise, Poste..."
-            style={s.input}
-          />
-          <button
-            onClick={() => {
-              if (customMetier.trim()) {
-                setPrioritizedMetiers(prev => [...prev, { titre: customMetier.trim(), raison: "Ajouté manuellement", score_matching: 80, active: true }])
-                setCustomMetier("")
-              }
-            }}
-            style={{ background: "#16a34a", color: "white", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}
-          >
-            + Ajouter
-          </button>
-        </div>
-        {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").length > 0 && (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-            {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").map((m, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 999, padding: "4px 12px", fontSize: 13, color: "#166534" }}>
-                {m.titre}
-                <button onClick={() => setPrioritizedMetiers(prev => prev.filter(p => p.titre !== m.titre))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
                 </div>
               </div>
+
               <p style={{ color: "#4b7a5a", fontSize: 13, marginBottom: 20 }}>
                 Utilise les flèches pour trier par ordre de priorité. Décoche les métiers qui ne t'intéressent pas.
               </p>
+
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {prioritizedMetiers.map((metier, index) => (
                   <div key={index} style={{ border: `1px solid ${metier.active === false ? "#f3f4f6" : "#dcfce7"}`, borderRadius: 12, padding: "12px 16px", background: metier.active === false ? "#f9fafb" : "white", display: "flex", alignItems: "center", gap: 12, opacity: metier.active === false ? 0.5 : 1 }}>
@@ -438,6 +406,39 @@ function App() {
                     <input type="checkbox" checked={metier.active !== false} onChange={() => toggleMetierActive(index)} style={{ accentColor: "#16a34a" }} />
                   </div>
                 ))}
+              </div>
+
+              <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
+                <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>
+                  Affine ta recherche avec des mots-clés <span style={{ color: "#4b7a5a", fontWeight: 400 }}>(optionnel)</span>
+                </p>
+                <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+                  <input
+                    type="text"
+                    value={customMetier}
+                    onChange={e => setCustomMetier(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Enter") addCustomMetier() }}
+                    placeholder="Job, Entreprise, Poste..."
+                    style={s.input}
+                  />
+                  <button
+                    onClick={addCustomMetier}
+                    style={{ background: "#16a34a", color: "white", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}
+                  >
+                    + Ajouter
+                  </button>
+                </div>
+                <p style={{ fontSize: 12, color: "#4b7a5a", marginBottom: 8 }}>Appuie sur Entrée ou clique sur Ajouter</p>
+                {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").length > 0 && (
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {prioritizedMetiers.filter(m => m.raison === "Ajouté manuellement").map((m, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 999, padding: "4px 12px", fontSize: 13, color: "#166534" }}>
+                        {m.titre}
+                        <button onClick={() => setPrioritizedMetiers(prev => prev.filter(p => p.titre !== m.titre))} style={{ background: "none", border: "none", color: "#16a34a", cursor: "pointer", fontSize: 14, padding: 0 }}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -488,21 +489,17 @@ function App() {
                 {scraping ? "Recherche en cours..." : "Rechercher les offres"}
               </button>
               {scraping && (
-  <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-    <div style={{ display: "flex", gap: 8 }}>
-      {[0, 1, 2].map(i => (
-        <div key={i} style={{
-          width: 12, height: 12, borderRadius: "50%", background: "#16a34a",
-          animation: "bounce 1.2s infinite",
-          animationDelay: `${i * 0.2}s`
-        }} />
-      ))}
-    </div>
-    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Recherche des offres en cours...</p>
-    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>Analyse de ton profil sur Indeed, LinkedIn, WTTJ — 2 à 3 minutes</p>
-    <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
-  </div>
-)}
+                <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                  <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {[0, 1, 2].map(i => (
+                      <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: "#16a34a", animation: "bounce 1.2s infinite", animationDelay: `${i * 0.2}s` }} />
+                    ))}
+                  </div>
+                  <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Recherche des offres en cours...</p>
+                  <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>Analyse de ton profil sur Indeed, LinkedIn, WTTJ — 2 à 3 minutes</p>
+                </div>
+              )}
             </div>
           </div>
         )}
