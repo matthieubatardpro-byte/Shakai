@@ -262,9 +262,23 @@ function App() {
 
               <div style={{ maxWidth: 480, margin: "0 auto" }}>
                 <div
-                  onClick={() => document.getElementById("cvInput").click()}
-                  style={{ border: `2px dashed ${cvFile ? "#16a34a" : "#166534"}`, borderRadius: 14, padding: "40px 24px", background: cvFile ? "#0a3a1a" : "#0a2a12", cursor: "pointer", marginBottom: 20, transition: "all 0.2s" }}
-                >
+  onClick={() => document.getElementById("cvInput").click()}
+  onDragOver={(e) => e.preventDefault()}
+  onDragEnter={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = "#4ade80"; e.currentTarget.style.background = "#0f3d1f" }}
+  onDragLeave={(e) => { e.currentTarget.style.borderColor = cvFile ? "#16a34a" : "#166534"; e.currentTarget.style.background = cvFile ? "#0a3a1a" : "#0a2a12" }}
+  onDrop={(e) => {
+    e.preventDefault()
+    e.currentTarget.style.borderColor = "#16a34a"
+    e.currentTarget.style.background = "#0a3a1a"
+    const file = e.dataTransfer.files[0]
+    if (file && (file.name.endsWith(".pdf") || file.name.endsWith(".docx"))) {
+      setCvFile(file)
+    } else {
+      alert("Format accepté : PDF ou DOCX uniquement")
+    }
+  }}
+  style={{ border: `2px dashed ${cvFile ? "#16a34a" : "#166534"}`, borderRadius: 14, padding: "40px 24px", background: cvFile ? "#0a3a1a" : "#0a2a12", cursor: "pointer", marginBottom: 20, transition: "all 0.2s" }}
+>
                   <input id="cvInput" type="file" accept=".pdf,.docx" style={{ display: "none" }} onChange={(e) => setCvFile(e.target.files[0])} />
                   {cvFile ? (
                     <div>
