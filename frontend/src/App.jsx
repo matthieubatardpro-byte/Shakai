@@ -423,10 +423,21 @@ function App() {
                 {scraping ? "Recherche en cours..." : "Rechercher les offres"}
               </button>
               {scraping && (
-                <div style={{ marginTop: 16, padding: 16, background: "#f0fdf4", borderRadius: 8, border: "1px solid #dcfce7" }}>
-                  <p style={{ color: "#166534", fontSize: 13, margin: 0 }}>Recherche des offres d'emploi correspondant à tes critères en cours... (2 à 3 minutes)</p>
-                </div>
-              )}
+  <div style={{ marginTop: 16, padding: 24, background: "#052e16", borderRadius: 12, border: "1px solid #166534", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+    <div style={{ display: "flex", gap: 8 }}>
+      {[0, 1, 2].map(i => (
+        <div key={i} style={{
+          width: 12, height: 12, borderRadius: "50%", background: "#16a34a",
+          animation: "bounce 1.2s infinite",
+          animationDelay: `${i * 0.2}s`
+        }} />
+      ))}
+    </div>
+    <p style={{ color: "#86efac", fontSize: 14, margin: 0 }}>Recherche des offres en cours...</p>
+    <p style={{ color: "#4ade80", fontSize: 12, margin: 0, opacity: 0.7 }}>Analyse de ton profil sur Indeed, LinkedIn, WTTJ — 2 à 3 minutes</p>
+    <style>{`@keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-12px); opacity: 1; } }`}</style>
+  </div>
+)}
             </div>
           </div>
         )}
