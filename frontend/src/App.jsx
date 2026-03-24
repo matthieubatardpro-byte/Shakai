@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import axios from "axios"
 
 const API = window.location.hostname === "localhost" 
@@ -22,7 +22,16 @@ function App() {
   const [prioritizedMetiers, setPrioritizedMetiers] = useState([])
   const [sortByDate, setSortByDate] = useState(false)
   const [selectedMetier, setSelectedMetier] = useState("")
-
+  const contractDropdownRef = useRef(null)
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (contractDropdownRef.current && !contractDropdownRef.current.contains(event.target)) {
+      setContractDropdownOpen(false)
+    }
+  }
+  document.addEventListener("mousedown", handleClickOutside)
+  return () => document.removeEventListener("mousedown", handleClickOutside)
+}, [])
   const toggleContract = (contract) => {
     setSelectedContracts(prev =>
       prev.includes(contract) ? prev.filter(c => c !== contract) : [...prev, contract]
@@ -385,7 +394,7 @@ function App() {
                       <span style={{ marginLeft: 6, background: "#16a34a", color: "white", borderRadius: 999, fontSize: 11, padding: "1px 6px" }}>{selectedContracts.length}</span>
                     )}
                   </label>
-                  <div style={{ position: "relative" }}>
+                  <div style={{ position: "relative" }} ref={contractDropdownRef}>
                     <button onClick={() => setContractDropdownOpen(!contractDropdownOpen)} style={{ width: "100%", textAlign: "left", background: "white", border: "1px solid #bbf7d0", borderRadius: 8, padding: "8px 12px", fontSize: 14, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ color: selectedContracts.length > 0 ? "#052e16" : "#9ca3af" }}>
                         {selectedContracts.length > 0 ? selectedContracts.join(", ") : "Tous les contrats"}
