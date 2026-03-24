@@ -331,7 +331,7 @@ function App() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 {[
                   { label: "Offres analysées", value: "En temps réel" },
-                  { label: "Sites d'offres scrapés", value: "Indeed, Welcome to the Jungle, Linkedin..." },
+                  { label: "Recherche d'offres", value: "Indeed, Welcome to the Jungle, Linkedin..." },
                   { label: "Lettres générées", value: "Par GPT-4o" },
                 ].map((item, i) => (
                   <div key={i} style={{ background: "white", border: "1px solid #dcfce7", borderRadius: 10, padding: "14px 12px", textAlign: "center" }}>
