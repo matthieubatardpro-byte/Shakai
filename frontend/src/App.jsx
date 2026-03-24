@@ -381,17 +381,17 @@ function App() {
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-  {prioritizedMetiers.map((metier, index) => (
-    <div key={index} style={{ border: `1px solid ${metier.active === false ? "#f3f4f6" : "#dcfce7"}`, borderRadius: 12, padding: "12px 16px", background: metier.active === false ? "#f9fafb" : "white", display: "flex", alignItems: "center", gap: 12, opacity: metier.active === false ? 0.5 : 1 }}>
-      <div style={{ flex: 1 }}>
-        <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: "#052e16" }}>{metier.titre}</p>
-        <p style={{ margin: 0, fontSize: 12, color: "#4b7a5a" }}>{metier.raison}</p>
-      </div>
-      <span style={s.badge("#dcfce7", "#166534")}>{metier.score_matching}%</span>
-      <input type="checkbox" checked={metier.active !== false} onChange={() => toggleMetierActive(index)} style={{ accentColor: "#16a34a" }} />
-    </div>
-  ))}
-</div>
+               {prioritizedMetiers.map((metier, index) => (
+                <div key={index} style={{ border: `1px solid ${metier.active === false ? "#f3f4f6" : "#dcfce7"}`, borderRadius: 12, padding: "12px 16px", background: metier.active === false ? "#f9fafb" : "white", display: "flex", alignItems: "center", gap: 12, opacity: metier.active === false ? 0.5 : 1 }}>
+                  <div style={{ flex: 1 }}>
+                   <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: "#052e16" }}>{metier.titre}</p>
+                   <p style={{ margin: 0, fontSize: 12, color: "#4b7a5a" }}>{metier.raison}</p>
+                </div>
+                <span style={s.badge("#dcfce7", "#166534")}>{metier.score_matching}%</span>
+                <input type="checkbox" checked={metier.active !== false} onChange={() => toggleMetierActive(index)} style={{ accentColor: "#16a34a" }} />
+               </div>
+               ))}
+             </div>
 
               <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #dcfce7" }}>
                 <p style={{ fontSize: 13, fontWeight: 500, color: "#052e16", marginBottom: 8 }}>
